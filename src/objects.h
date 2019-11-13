@@ -11,7 +11,7 @@ private:
 
 public:
     objects();
-    int newObject(int type, GLuint texture, float height, float base);
+    int newObject(int type, GLuint texture, int otherList);
 };
 
 #endif /* OBJECTS_CLASS_ */

@@ -6,10 +6,11 @@
 bool keys[4];
 int width = 0, height = 0;
 GLuint floorTexture;
+float rotation = 0.00f;
 
-int floorDisplayList, treeDisplayList[5];
+int floorDisplayList, treeDisplayList[5], wheelDisplayList, standDisplayList, benchDisplayList;
 
-bool cursor = true;
+bool cursor = true, lightOn = true;
 
 skybox* box = nullptr;
 objects* obj = nullptr;
@@ -50,9 +51,20 @@ void draw() {
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
     glBindTexture(GL_TEXTURE_2D, 0);
-    //
 
-    glCallList(treeDisplayList[0]);
+    // Ferris wheel
+    glPushMatrix();
+        glTranslatef(5.0f, 0.0f, -5.0f);
+        glCallList(standDisplayList);
+        glPushMatrix();
+		    glTranslatef(0.2f, 1.0f, 0.0f);
+            glRotatef(rotation, 1.0f, 0.0f, 0.0f);
+            glCallList(wheelDisplayList);
+        glPopMatrix();
+    glPopMatrix();
+    rotation += 0.01f;
+
+    /*glCallList(treeDisplayList[0]);
     glPushMatrix();
     glTranslatef(1.5f, -1.5f, 0.0f);
     glCallList(treeDisplayList[1]);
@@ -61,7 +73,7 @@ void draw() {
     glPushMatrix();
     glTranslatef(3.0f, -1.5f, 0.0f);
     glCallList(treeDisplayList[2]);
-    glPopMatrix();
+    glPopMatrix();*/
 
     glutSwapBuffers();
 }
@@ -71,9 +83,13 @@ void setup(){
 
     floorTexture = loadTexture("img/grass3.jpg");
     obj = new objects();
-    floorDisplayList = obj->newObject(OBJECT_FLOOR, floorTexture, 0, 0);
-    for(int i = 0; i < 5; i++)
-        treeDisplayList[i] = obj->newObject(OBJECT_TREE, 0, 1.5, 0.2);
+    floorDisplayList = obj->newObject(OBJECT_FLOOR, floorTexture, 0);
+    /*for(int i = 0; i < 5; i++)
+        treeDisplayList[i] = obj->newObject(OBJECT_TREE, 0, 1.5, 0.2);*/
+    standDisplayList = obj->newObject(OBJECT_STAND, 0, 0);
+    benchDisplayList = obj->newObject(OBJECT_BENCH, 0, 0);
+    wheelDisplayList = obj->newObject(OBJECT_WHEEL, 0, 0);
+
     box = new skybox();
     ShowCursor(false);
 }
@@ -97,6 +113,22 @@ void keyboardPress(unsigned char key, int x, int y)
         // Tecla ESC
         case 27:
             exit(0);
+            break;
+
+        case 'l':
+            if(lightOn){
+                lightOn = false;
+                glDisable(GL_LIGHT0);
+                glDisable(GL_NORMALIZE);
+                glDisable(GL_COLOR_MATERIAL);
+                glDisable(GL_LIGHTING);
+            } else {
+                lightOn = true;
+                glEnable(GL_LIGHT0);
+                glEnable(GL_NORMALIZE);
+                glEnable(GL_COLOR_MATERIAL);
+                glEnable(GL_LIGHTING);
+            }
             break;
     }
     glutPostRedisplay();
@@ -187,7 +219,7 @@ static void refresh(void)
 }
 
 // configura alguns parâmetros do modelo de iluminação: FONTE DE LUZ
-const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+const GLfloat light_ambient[]  = { 0.5f, 0.5f, 0.5f, 0.1f }; // 0 0 0 1
 const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
 const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 const GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };
@@ -232,7 +264,7 @@ int main(int argc, char** argv)
 
 	cam.positionCamera(0, 2.5f, 5,	0, 2.5f, 0,   0, 1, 0);
 
-    /*glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT0);
     glEnable(GL_NORMALIZE);
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHTING);
@@ -245,7 +277,7 @@ int main(int argc, char** argv)
     glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);*/
+    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 
     setup();
 
