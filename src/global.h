@@ -32,4 +32,19 @@ enum SKYBOX_DIR {
     SKYBOX_DOWN
 };
 
+enum OBJECTS_TYPE {
+    OBJECT_NONE,
+    OBJECT_FLOOR,
+    OBJECT_TREE,
+    OBJECT_STEM,
+    OBJECT_LEAF,
+    OBJECT_STEMANDLEAVES,
+    OBJECT_LEAF_MAT,
+    OBJECT_TREE_MAT
+};
+
+#define CAMERA_SPEED 0.001f
+#define drand48() (((float) rand())/((float) RAND_MAX))
+#define srand48(x) (srand((x)))
+
 #endif /* GLOBAL_ */

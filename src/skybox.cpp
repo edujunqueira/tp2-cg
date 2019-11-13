@@ -10,9 +10,8 @@ skybox::skybox()
 void skybox::loadSkybox(int id)
 {
     std::string file;
-    file = "img/skybox" + std::to_string(id) + ".png";
+    file = "img/hills" + std::to_string(id) + ".tga";
     textures[id] = loadTexture(file.c_str());
-    std::cout << textures[id] << std::endl;
 	glBindTexture(GL_TEXTURE_2D, textures[id]);
     /*int texWidth, texHeight;
     glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &texWidth);
@@ -31,6 +30,8 @@ void skybox::draw (float x, float y, float z, float width, float height, float l
 	y = y - height / 2;
 	z = z - length / 2;
 
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
 	// Draw Front side
 	glBindTexture(GL_TEXTURE_2D, this->textures[SKYBOX_FRONT]);
 	glBegin(GL_QUADS);
@@ -84,5 +85,8 @@ void skybox::draw (float x, float y, float z, float width, float height, float l
 		glTexCoord2f(1.0f, 1.0f); glVertex3f(x+width, y,		z+length);
 		glTexCoord2f(0.0f, 1.0f); glVertex3f(x+width, y,		z);
 	glEnd();
+
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 
 }
