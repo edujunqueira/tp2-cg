@@ -4,6 +4,118 @@
 
 #include "objects.h"
 
+void loadCarouselStand(int list)
+{
+	glNewList(list, GL_COMPILE);
+		GLUquadric *base = gluNewQuadric();
+		glColor3f(0.80f, 0.50f, 0.19f);
+		glPushMatrix();
+			glRotatef(90, 1.0, 0.0, 0.0);
+			gluCylinder(base, 0.2f, 0.35f, 4, 4, 20);
+		glPopMatrix();
+	glEndList();
+}
+
+void loadCarousel(int list)
+{
+	int sides = 30, linhas = 15;
+	glNewList(list, GL_COMPILE);
+		glPushMatrix();
+			glColor3f(0.80f, 0.50f, 0.19f);
+			glBegin(GL_TRIANGLE_FAN);
+				glVertex3f(0.0f, 0.0f, 0.0f);
+				for(int i = 0; i < (sides + 1); i++){
+					float theta = 2.0f * 3.1415926f * i / sides;
+					glVertex3f(2.5f * sin(theta), 0.6f, 2.5f * cos(theta));
+				}
+			glEnd();
+			glColor3f(1.0f, 1.0f, 1.0f);
+			glBegin(GL_LINES);
+				for(int j = 0; j < linhas; j++){
+					float theta = 2.0f * 3.1415926f * j / linhas;
+					glVertex3f(2.0f * sin(theta), 0.48f, 2.0f * cos(theta));
+					glVertex3f(2.5f * sin(theta), -((rand() % 15 + 15) / 10.0f) , 2.5f * cos(theta));
+				}
+			glEnd();
+		glPopMatrix();
+	glEndList();
+}
+
+void loadKamikazeStand(int list)
+{
+	glNewList(list, GL_COMPILE);
+		GLUquadric *base = gluNewQuadric();
+		GLUquadric *base1 = gluNewQuadric();
+		glColor3f(0.6f, 0.6f, 0.6f);
+		glPushMatrix();
+			glRotatef(90, 1.0, 0.0, 0.0);
+			gluCylinder(base, 0.2f, 0.2f, 5, 4, 20);
+			glColor3f(0.88f, 0.88f, 0.4f);
+			glutSolidSphere(.5, 10, 10);
+		glPopMatrix();
+		glColor3f(0.6f, 0.6f, 0.6f);
+		glPushMatrix();
+			glRotatef(90, 0.0, 1.0, 0.0);
+			glTranslatef(0.0f, 0.0f, -1.5f);
+			gluCylinder(base1, 0.2f, 0.2f, 3, 20, 20);
+		glPopMatrix();
+	glEndList();
+}
+
+
+void loadKamikaze(int list)
+{
+	glNewList(list, GL_COMPILE);
+	GLUquadric *base = gluNewQuadric();
+	GLUquadric *base2 = gluNewQuadric();
+	GLUquadric *placa = gluNewQuadric();
+	GLUquadric *carro = gluNewQuadric();
+	GLUquadric *tampa = gluNewQuadric();
+	glColor3f(0.6f, 0.6f, 0.6f);
+
+	// suportes
+	glPushMatrix();
+		glTranslatef(1.5f, 3.5f, 0.0f);
+		glRotatef(90, 1.0, 0.0, 0.0);
+		gluCylinder(base, 0.2f, 0.2f, 3.5, 4, 20);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(1.5f, 0.0f, 0.0f);
+		glRotatef(90, 1.0, 0.0, 0.0);
+		gluCylinder(base2, 0.2f, 0.2f, 3.5, 4, 20);
+	glPopMatrix();
+
+	// placa
+	glColor3f(0.28f, 0.38f, 0.81f);
+	glPushMatrix();
+		glTranslatef(1.5f, 3.5f, -0.2f);
+		glRotatef(30, 1.0, 0.0, 0.0);
+		gluCylinder(placa, 0.4f, 0.4f, 1.5, 4, 20);
+		glTranslatef(0.0f, 0.0f, 1.5f);
+		gluDisk(tampa, 0.0f, 0.4f, 4, 4);
+	glPopMatrix();
+	glPushMatrix();
+		glTranslatef(1.5f, 3.5f, 0.2f);
+		glRotatef(-210, 1.0, 0.0, 0.0);
+		gluCylinder(placa, 0.4f, 0.4f, 1.5, 4, 20);
+		glTranslatef(0.0f, 0.0f, 1.5f);
+		gluDisk(tampa, 0.0f, 0.4f, 4, 4);
+	glPopMatrix();
+
+	// carro
+	glColor3f(0.96f, 0.74f, 0.84f);
+	glPushMatrix();
+		glTranslatef(1.5f, -3.5f, -1.5f);
+		gluCylinder(carro, 0.6f, 0.6f, 3, 4, 20);
+		gluDisk(tampa, 0.0f, 0.6f, 4, 4);
+		glTranslatef(0.0f, 0.0f, 3.0f);
+		gluDisk(tampa, 0.0f, 0.6f, 4, 4);
+	glPopMatrix();
+
+	glEndList();
+}
+
 void loadStand(int list)
 {
 	glNewList(list, GL_COMPILE);
@@ -107,6 +219,7 @@ void loadWheel(int list)
 
 void loadBench(int list)
 {
+	float size;
 	glNewList(list, GL_COMPILE);
 	glBegin(GL_QUADS);
         // parte de trás-cima
@@ -198,7 +311,7 @@ void loadBench(int list)
 	glEndList();
 }
 
-/*
+
 void loadTree(float height, float base)
 {
 	float angle;
@@ -225,11 +338,11 @@ void loadTree(float height, float base)
 		}
         else{
             glColor3f(0.0, 1.0/a, 0.0);
-            glutSolidSphere(.2,10,10);
+            glutSolidSphere(0.7f, 5, 5);
         }
 	}
 }
-*/
+
 
 void loadFloor(int list, GLuint texture) {
 
@@ -273,7 +386,7 @@ int objects::newObject(int type, GLuint texture, int otherList)
 
         case(OBJECT_TREE):
             glNewList(displayLists[listCount-1], GL_COMPILE);
-                //loadTree(height, base);
+                loadTree(1.5, 0.2);
             glEndList();
             break;
 
@@ -288,6 +401,22 @@ int objects::newObject(int type, GLuint texture, int otherList)
 		case(OBJECT_BENCH):
 	        loadBench(displayLists[listCount-1]);
             break;
+
+		case(OBJECT_KAMIKAZE):
+			loadKamikaze(displayLists[listCount-1]);
+			break;
+
+		case(OBJECT_KAMIKAZE_STAND):
+			loadKamikazeStand(displayLists[listCount-1]);
+			break;
+
+		case(OBJECT_CAROUSEL):
+			loadCarousel(displayLists[listCount-1]);
+			break;
+
+		case(OBJECT_CAROUSEL_STAND):
+			loadCarouselStand(displayLists[listCount-1]);
+			break;
     }
     listCount++;
     return displayLists[listCount-2];
